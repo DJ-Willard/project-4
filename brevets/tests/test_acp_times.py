@@ -14,7 +14,7 @@ def
 
 def test_brevet_200km():
         brevet_dist = 200
-        brevet_start_time = arrow.get('2023-01-01T00:00:00')
+        brevet_start_time = arrow.get('2023-01-01T00:00:00', 'YYYY-MM-DD HH:mm')
         checkpoints = {
                 0: (brevet_start_time, brevet_start_time.shift(hours=1)),
                50: (brevet_start_time.shift(hours=1, minutes=28), brevet_start_time.shift(hours=3, minutes=30)),
@@ -30,7 +30,7 @@ def test_brevet_200km():
 
 def test_brevet_300km():
         brevet_dist = 300
-        brevet_start_time = arrow.get('2023-01-01T00:00:00')
+        brevet_start_time = arrow.get('2023-01-01T00:00:00', 'YYYY-MM-DD HH:mm')
         checkpoints = {
                 0: (brevet_start_time, brevet_start_time.shift(hours=1)),
               100: (brevet_start_time.shift(hours=2, minutes=56), brevet_start_time.shift(hours=6, minutes=40)),
@@ -47,7 +47,7 @@ def test_brevet_300km():
 
 def test_brevet_400km():
         brevet_dist = 400
-        brevet_start_time = arrow.get('2023-01-01T00:00:00')
+        brevet_start_time = arrow.get('2023-01-01T00:00:00', 'YYYY-MM-DD HH:mm')
         checkpoints = {
                 0: (brevet_start_time, brevet_start_time.shift(hours=1)),
               100: (brevet_start_time.shift(hours=2, minutes=56), brevet_start_time.shift(hours=6, minutes=40)),
@@ -64,7 +64,7 @@ def test_brevet_400km():
 
 def test_brevet_600km():
         brevet_dist = 600
-        brevet_start_time = arrow.get('2023-01-01T00:00:00')
+        brevet_start_time = arrow.get('2023-01-01T00:00:00', 'YYYY-MM-DD HH:mm')
         checkpoints = {
                 0: (brevet_start_time, brevet_start_time.shift(hours=1)),
               100: (brevet_start_time.shift(hours=2, minutes=56), brevet_start_time.shift(hours=6, minutes=40), 
@@ -83,7 +83,7 @@ def test_brevet_600km():
 
 def test_brevet_1000km():
         brevet_dist = 1000
-        brevet_start_time = arrow.get('2023-01-01T00:00:00')
+        brevet_start_time = arrow.get('2023-01-01T00:00:00', 'YYYY-MM-DD HH:mm')
         checkpoints = {
                 0: (brevet_start_time, brevet_start_time.shift(hours=1)),
               100: (brevet_start_time.shift(hours=2, minutes=56), brevet_start_time.shift(hours=6, minutes=40)),

@@ -5,6 +5,7 @@ following rules described at https://rusa.org/octime_acp.html
 and https://rusa.org/pages/rulesForRiders
 """
 import arrow
+import math
 
 
 #  You MUST provide the following two functions
@@ -41,20 +42,21 @@ def open_time(control_dist_km, brevet_dist_km, brevet_start_time):
        An arrow object indicating the control open time.
        This will be in the same time zone as the brevet start time.
     """
-    # Error catching control longer then total race distance
+    # Error catching control longer than total race distance
     if control_dist_km > brevet_dist_km:
         return None
-    # Error catching if control distance is 0 or less start time is the race start
+    # Error catching if control distance is 0 or less, start time is the race start
     if control_dist_km <= 0:
         return brevet_start_time
-    if control_dist_km < 0:
-        return None
 
-    ride_time = (control_dist_km/ MAX_SPEED[min(control_dist_km, 1000)]) * 60
-    ride_hours = math.floor(ride_time/60)
-    ride_minutes = math.floor(ride_time % 60)
-
-    return brevet_start_time.shift(hours= ride_hours, minutes= ride_minutes)
+    max_speed_dist = next(x for x in MIN_SPEED.keys() if x <= control_dist_km)
+    ride_time = (control_dist_km / MAX_SPEED[max_speed_dist]) * 60
+    ride_hours = math.floor(ride_time / 60)
+    print(f'openH: {ride_hours}')
+    ride_minutes = round(ride_time % 60)
+    print(f'openM: {ride_minutes}')
+    s_time = brevet_start_time.shift(hours=ride_hours, minutes=ride_minutes)
+    return s_time
 
 
 def close_time(control_dist_km, brevet_dist_km, brevet_start_time):
@@ -70,15 +72,19 @@ def close_time(control_dist_km, brevet_dist_km, brevet_start_time):
        This will be in the same time zone as the brevet start time.
     """
 
-    # Error catching control longer then total race distance
+    # Error catching control longer than total race distance
     if control_dist_km > brevet_dist_km:
         return None
-    # Error catching if control distance is 0 or less start time is the race start
+    # Error catching if control distance is 0 or less, start time is the race start + 1 hour
     if control_dist_km <= 0:
         return brevet_start_time.shift(hours=1)
 
-    ride_time = (control_dist_km/ MIN_SPEED[min(control_dist_km, 1000)]) * 60
-    ride_hours = math.floor(ride_time/60)
-    ride_minutes = math.floor(ride_time % 60)
+    min_speed_dist = next(x for x in MIN_SPEED.keys() if x <= control_dist_km)
+    ride_time = (control_dist_km / MIN_SPEED[min_speed_dist]) * 60
+    ride_hours = math.floor(ride_time / 60)
+    print(f'closeH= {ride_hours}')
+    ride_minutes = round(ride_time % 60)
+    print(f'closeM= {ride_minutes}')
+    c_time = brevet_start_time.shift(hours=ride_hours, minutes=ride_minutes)
 
-    return brevet_start_time.shift(hours= ride_hours, minutes= ride_minutes)
+    return c_time

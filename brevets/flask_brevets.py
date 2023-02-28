@@ -58,9 +58,7 @@ def _calc_times():
     app.logger.debug("request.args: {}".format(request.args))
     # FIXME!
     #fix implented distance reset and and start time reformated
-    start_time = arrow.get(start_time, "YYYY-MM-DD HH:mm")
-    
-
+    start_time = arrow.get(start_time, "YYYY-MM-DDTHH:mm")
 
     open_time = acp_times.open_time(km, brevet_dist, start_time.isoformat).format('YYYY-MM-DDTHH:mm')
     close_time = acp_times.close_time(km, brevet_dist, start_time.isoformat).format('YYYY-MM-DDTHH:mm')

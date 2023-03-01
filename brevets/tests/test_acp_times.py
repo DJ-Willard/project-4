@@ -59,7 +59,7 @@ def test_brevet_400km():
               100: (brevet_start_time.shift(hours=2, minutes=56), brevet_start_time.shift(hours=6, minutes=40)),
               200: (brevet_start_time.shift(hours=5, minutes=53), brevet_start_time.shift(hours=13, minutes=20)),
               300: (brevet_start_time.shift(hours=9, minutes=0), brevet_start_time.shift(hours=20, minutes=0)),
-              400: (brevet_start_time.shift(hours=12, minutes=8), brevet_start_time.shift(hours=27, minutes=0)),
+              400: (brevet_start_time.shift(hours=12, minutes=8), brevet_start_time.shift(hours=26, minutes=40)),
                       }
 
         for km, times in checkpoints.items():

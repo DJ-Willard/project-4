@@ -15,25 +15,26 @@ import math
 #
 
 MIN_SPEED = {
-        0: 15,
-        600: 11.428,
+        0   : 15,
+        600 : 11.428,
         1000: 13.333
         }
 
 MAX_SPEED = {
-        0: 34,
-        200: 32,
-        400: 30,
-        600: 28,
+        0   : 34,
+        200 : 32,
+        400 : 30,
+        600 : 28,
         1000: 26
         }
 
 DISTANCE_SPEED = {
-        200: MAX_SPEED[0],
-        400: MAX_SPEED[200],
-        600: MAX_SPEED[400],
-        1000: MAX_SPEED[600]
-        }
+    (0,200)    : 34,
+    (200,400)  : 32,
+    (400,600)  : 30,
+    (600,1000) : 28,
+    (1000,1200): 26
+}
 
 
 def open_time(control_dist_km, brevet_dist_km, brevet_start_time):
@@ -49,8 +50,8 @@ def open_time(control_dist_km, brevet_dist_km, brevet_start_time):
        This will be in the same time zone as the brevet start time.
     """
     # Error catching control longer than total race distance
-    if control_dist_km > brevet_dist_km:
-        return None
+    if control_dist_km > (brevet_dist_km * 1.2):
+        control_dist_km = brevet_dist_km
     # Error catching if control distance is 0 or less, start time is the race start
     if control_dist_km <= 0:
         return brevet_start_time
@@ -59,9 +60,10 @@ def open_time(control_dist_km, brevet_dist_km, brevet_start_time):
         opening_times = []
         control_dist = control_dist_km
         for distance in DISTANCE_SPEED:
-            if control_dist >= distance:
-                time = ((distance / DISTANCE_SPEED[distance]) * 60)
-                control_dist = control_dist - distance
+            dist = distance[1]-distance[0]
+            if control_dist >= dist:
+                time = ((dist / DISTANCE_SPEED[distance]) * 60)
+                control_dist -=  dist
             else:
                 time = ((control_dist / DISTANCE_SPEED[distance]) * 60)
                 control_dist = 0
@@ -69,7 +71,6 @@ def open_time(control_dist_km, brevet_dist_km, brevet_start_time):
             opening_times.append(time)
 
     ride_time = sum(opening_times)
-    print(f"rideT:{ride_time}")
     ride_hours = math.floor(ride_time / 60)
     print(f'openH: {ride_hours}, dist:{control_dist_km}')
     ride_minutes = round(ride_time % 60)

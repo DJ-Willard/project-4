@@ -29,10 +29,10 @@ MAX_SPEED = {
         }
 
 DISTANCE_SPEED = {
-        200: MAX_SPEED[200],
-        400: MAX_SPEED[400],
-        600: MAX_SPEED[600],
-        1000: MAX_SPEED[1000]
+        200: MAX_SPEED[0],
+        400: MAX_SPEED[200],
+        600: MAX_SPEED[400],
+        1000: MAX_SPEED[600]
         }
 
 
@@ -55,23 +55,25 @@ def open_time(control_dist_km, brevet_dist_km, brevet_start_time):
     if control_dist_km <= 0:
         return brevet_start_time
 
-    opening_times = []
-    control_dist = control_dist_km
-    for distance in DISTANCE_SPEED:
-        if control_dist > distance
-            time = (distance / DISTANCE_SPEED[distance])*60
-            control_dist -= distance
-        else:
-            time = (control_dist/ DISTANCE_SPEED[distance])*60
-            control_dist = 0
-        opening_times.append(time)
+    if control_dist_km <= (brevet_dist_km * 1.2):
+        opening_times = []
+        control_dist = control_dist_km
+        for distance in DISTANCE_SPEED:
+            if control_dist >= distance:
+                time = ((distance / DISTANCE_SPEED[distance]) * 60)
+                control_dist = control_dist - distance
+            else:
+                time = ((control_dist / DISTANCE_SPEED[distance]) * 60)
+                control_dist = 0
 
-    #max_speed_dist = next(x for x in MAX_SPEED.keys() if x <= control_dist_km)
+            opening_times.append(time)
+
     ride_time = sum(opening_times)
+    print(f"rideT:{ride_time}")
     ride_hours = math.floor(ride_time / 60)
-    print(f'openH: {ride_hours}')
+    print(f'openH: {ride_hours}, dist:{control_dist_km}')
     ride_minutes = round(ride_time % 60)
-    print(f'openM: {ride_minutes}')
+    print(f'openM: {ride_minutes}, dist:{control_dist_km}')
     s_time = brevet_start_time.shift(hours=ride_hours, minutes=ride_minutes)
     return s_time
 
@@ -89,31 +91,31 @@ def close_time(control_dist_km, brevet_dist_km, brevet_start_time):
        This will be in the same time zone as the brevet start time.
     """
 
-    # Error catching control longer than total race distance
-    if control_dist_km > brevet_dist_km:
-        return None
     # Error catching if control distance is 0 or less, start time is the race start + 1 hour
     if control_dist_km <= 0:
         return brevet_start_time.shift(hours=1)
 
-    # Calculate control closing time for distances up to 600km
-    if control_dist_km <= 600:
-            closing_time =
+    # Calculate control closing time for distances form 0 to 600km
+    if (control_dist_km <= 600) and (control_dist_km <= (brevet_dist_km * 1.2)):
+        # Calculate control closing time for distances to 200km
+        # By the rules, the overall time limit for a 200km brevet is 13H30
+        if control_dist_km <= 200 and brevet_dist_km == 200:
+            if control_dist_km == 200 or control_dist_km < 100:
+                ride_time = (((control_dist_km / MIN_SPEED[0]) * 60) + 10)
+            else:
+                ride_time = ((control_dist_km / MIN_SPEED[0]) * 60)
+        else:
+            ride_time = ((control_dist_km / MIN_SPEED[0]) * 60)
 
+    # Calculate control closing time for distances between 600km and 1200km
+    if (control_dist_km > 600) and (control_dist_km <= (brevet_dist_km * 1.2)):
+        ride_time = ((600 / MIN_SPEED[0]) * 60)
+        ride_time += (((control_dist_km-600)/MIN_SPEED[600])*60)
 
-    # Calculate control closing time for distances between 600km and 1000km
-    if control_dist_km > 600:
-
-
-    # Calculate control closing time for distances between 600km and 1000km
-    if control_dist_km > 600:
-
-    min_speed_dist = next(x for x in MIN_SPEED.keys() if x <= control_dist_km)
-    ride_time = (control_dist_km / MIN_SPEED[min_speed_dist]) * 60
-    ride_hours = math.floor(ride_time / 60)
-    print(f'closeH= {ride_hours}')
-    ride_minutes = round(ride_time % 60)
-    print(f'closeM= {ride_minutes}')
+    ride_hours = math.floor((ride_time / 60))
+    #print(f'closeH= {ride_hours}, dist:{control_dist_km}')
+    ride_minutes = round((ride_time % 60))
+    #print(f'closeM= {ride_minutes}, dist:{control_dist_km}')
     c_time = brevet_start_time.shift(hours=ride_hours, minutes=ride_minutes)
 
     return c_time
